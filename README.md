@@ -26,27 +26,22 @@ Non-Interactive Console: Support non-interactive commands for automated processe
 
 Tech Stack
 
-Frontend
+Frontend:
 Custom Console (Interactive and Non-Interactive)
 
-Backend
-Python
-Flask
-JSON (as the data storage format)
+Backend: Python, Flask, JSON (as the data storage format)
+
 
 Installation
-Clone the repository
-git clone https://github.com/yourusername/airbnb-clone.git
 
-Navigate to the project directory
-cd airbnb-clone
+1. Clone the repository: git clone https://github.com/yourusername/airbnb-clone.git
+2. Navigate to the project directory
+3. cd airbnb-clone
 
-Install dependencies
-pip install -r requirements.txt
+Install dependencies: pip install -r requirements.txt
 
-Start the backend server
-python app.py
+Start the backend server: ./console.py
 
-Usage
-Open the custom console in your browser or terminal.
-Start exploring and using the Airbnb clone application.
+Usage:
+1. Open the custom console in your browser or terminal.
+2. Start exploring and using the Airbnb clone application.
