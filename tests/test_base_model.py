@@ -9,16 +9,16 @@ class TestBaseModel(unittest.TestCase):
         instance = BaseModel()
 
         self.assertIsNotNone(instance.id)
-        self.assertIsNotNone(instance.date_created)
-        self.assertIsNotNone(instance.date_updated)
+        self.assertIsNotNone(instance.created_at)
+        self.assertIsNotNone(instance.updated_at)
 
     def test_save(self):
         instance = BaseModel()
 
-        prev_date_updated = instance.date_updated
-        current_date_updated = instance.save()
+        prev_updated_at = instance.updated_at
+        current_updated_at = instance.save()
 
-        self.assertNotEqual(prev_date_updated, current_date_updated)
+        self.assertNotEqual(prev_updated_at, current_updated_at)
 
     def test_to_dict(self):
         instance = BaseModel()
@@ -29,8 +29,8 @@ class TestBaseModel(unittest.TestCase):
 
         self.assertEqual(instance_dict["__class__"], "BaseModel")
         self.assertEqual(instance_dict["id"], instance.id)
-        self.assertEqual(instance_dict["date_created"], instance.date_created.isoformat())
-        self.assertEqual(instance_dict["date_updated"], instance.date_updated.isoformat())
+        self.assertEqual(instance_dict["created_at"], instance.created_at.isoformat())
+        self.assertEqual(instance_dict["updated_at"], instance.updated_at.isoformat())
 
     def test_str(self):
         instance = BaseModel()

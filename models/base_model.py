@@ -21,14 +21,14 @@ class BaseModel:
         and creation/update timestamps.
         """
         self.id = str(uuid.uuid4())
-        self.date_created = datetime.utcnow()
-        self.date_updated = datetime.utcnow()
+        self.created_at = datetime.utcnow()
+        self.updated_at = datetime.utcnow()
 
     def save(self):
         """
-        Updates the 'date_updated' attribute to the current date and time.
+        Updates the 'updated_at' attribute to the current date and time.
         """
-        self.date_updated = datetime.utcnow()
+        self.updated_at = datetime.utcnow()
 
     def to_dict(self):
         """
@@ -39,8 +39,8 @@ class BaseModel:
         """
         instance_dict = self.__dict__.copy()
         instance_dict["__class__"] = self.__class__.__name__
-        instance_dict["date_created"] = self.date_created.isoformat()
-        instance_dict["date_updated"] = self.date_updated.isoformat()
+        instance_dict["created_at"] = self.created_at.isoformat()
+        instance_dict["updated_at"] = self.updated_at.isoformat()
         return instance_dict
 
     def __str__(self):
