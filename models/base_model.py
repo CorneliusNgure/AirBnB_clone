@@ -15,14 +15,25 @@ class BaseModel:
     A class representing a base model with unique identifiers and timestamps.
     """
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+
         """
         Initializes new instance of the BaseModel class with a unique id
         and creation/update timestamps.
         """
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
+        format_time = "%Y-%m-%dT%H:%M:%S.%f"
+        if kwargs:
+            for i, j in kwargs.items():
+                if i == "__class__":
+                    continue
+                if i == "created_at" or i == "updated_at":
+                    setattr(self, i, datetime.strptime(j, format_time))
+                else:
+                    setattr(self, i, j)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.utcnow()
+            self.updated_at = datetime.utcnow()
 
     def save(self):
         """
