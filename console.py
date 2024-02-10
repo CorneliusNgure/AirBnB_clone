@@ -13,7 +13,9 @@ Classes:
 """
 
 import cmd
-
+import shlex
+from models.base_model import BaseModel
+from models import storage
 
 class HBNBCommand(cmd.Cmd):
     """
@@ -27,6 +29,7 @@ class HBNBCommand(cmd.Cmd):
     """
 
     prompt = "(hbnb) "
+    permissible_classes = ["BaseModel"]
 
     def do_quit(self, arg):
         """
@@ -69,6 +72,115 @@ class HBNBCommand(cmd.Cmd):
         """
         print()
         return True
+
+    def Empty_Line(self):
+        """Unresponsive when empty line is entered"""
+        pass
+
+    def do_create(self, arg):
+        """Create a new instance of the BaseModel and load it
+            to JSON
+        """
+        commands = shlex.split(arg)
+
+        if len(commands) == 0:
+            print("** class name missing **")
+        if commands[0] not in self.permissible_classes:
+            print("** class doesn't exist **")
+        else:
+            new_instance = BaseModel()
+            new_instance.save()
+            print(new_instance.id)
+
+    def do_show(self, arg):
+        """ Display the string representative of an instance"""
+        commands = shlex.split(arg)
+
+        if len(commands) == 0:
+            print("** class name missing **")
+        if commands[0] not in self.permissible_classes:
+            print("** class doesn't exist **")
+        if len(commands) < 2:
+            print("** instance id missing **")
+        else:
+            objects = storage.all()
+
+            key = "{}.{}".format(commands[0], commands[1])
+            if key in objects:
+                print(objects[key])
+            else:
+                print("** no instance found **")
+
+    def do_destroy(self, arg):
+        """Delete instances by specifying their class and id"""
+        commands = shlex.split(arg)
+
+        if len(commands) == 0:
+            print("** class name missing **")
+            return
+        if commands[0] not in self.permissible_classes:
+            print("** class doesn't exist **")
+        if len(commands) < 2:
+            print("** instance id is missing **")
+        else:
+            objects = storage.all()
+            key = "{}.{}".format(commands[0], commands[1])
+            if key in objects:
+                del objects[key]
+                storage.save()
+            else:
+                print("** no instance found **")
+
+    def do_all(self, arg):
+        """Display the string representation of instances or classes"""
+        objects = storage.all()
+
+        commands = shlex.split(arg)
+
+        if len(commands) == 0:
+            for key, value in objects.items():
+                print(str(value))
+        if commands[0] not in self.permissible_classes:
+            print("** class doesn't exist **")
+        else:
+            for key, value in objects.items():
+                if key.split(".")[0] == commands[0]:
+                    print(str(value))
+
+    def do_update(self, arg):
+        """Updates attributes of an instance"""
+
+        commands = shlex.split(arg)
+
+        if len(commands) == 0:
+            print("** class name missing **")
+        if commands [0] not in self.permissible_classes:
+            print("** class doesn't exist **")
+        if len(commands) < 2:
+            print("** instance id missing **")
+        else:
+            objects = storage.all()
+
+            key = "{}.{}".format(commands[0], commands[1])
+            if key not in objects:
+                print("** no instance found **")
+            if len(commands) < 3:
+                print("** attribute is missing **")
+            if len(commands) < 4:
+                print("** value is missing **")
+            else:
+                obj = objects[key]
+
+            name_of_attribute = commands[2]
+            value_of_attribute = commands[3]
+
+            try:
+                value_of_attribute = eval[value_of_attribute]
+            except Exception:
+                pass
+            setattr(obj, name_of_attribute, value_of_attribute)
+
+            obj.save()
 
 
 if __name__ == "__main__":
