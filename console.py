@@ -81,11 +81,11 @@ class HBNBCommand(cmd.Cmd):
         """Create a new instance of the BaseModel and load it
             to JSON
         """
-        commands = shlex.split(arg)
+        cmd_args = shlex.split(arg)
 
-        if len(commands) == 0:
+        if len(cmd_args) == 0:
             print("** class name missing **")
-        if commands[0] not in self.permissible_classes:
+        if cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
         else:
             new_instance = BaseModel()
@@ -94,93 +94,93 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         """ Display the string representative of an instance"""
-        commands = shlex.split(arg)
+        cmd_args = shlex.split(arg)
 
-        if len(commands) == 0:
+        if len(cmd_args) == 0:
             print("** class name missing **")
-        if commands[0] not in self.permissible_classes:
+        if cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
-        if len(commands) < 2:
+        if len(cmd_args) < 2:
             print("** instance id missing **")
         else:
-            objects = storage.all()
+            object_storage = storage.all()
 
-            key = "{}.{}".format(commands[0], commands[1])
-            if key in objects:
-                print(objects[key])
+            key = "{}.{}".format(cmd_args[0], cmd_args[1])
+            if key in object_storage:
+                print(object_storage[key])
             else:
                 print("** no instance found **")
 
     def do_destroy(self, arg):
         """Delete instances by specifying their class and id"""
-        commands = shlex.split(arg)
+        cmd_args = shlex.split(arg)
 
-        if len(commands) == 0:
+        if len(cmd_args) == 0:
             print("** class name missing **")
             return
-        if commands[0] not in self.permissible_classes:
+        if cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
-        if len(commands) < 2:
+        if len(cmd_args) < 2:
             print("** instance id is missing **")
         else:
-            objects = storage.all()
-            key = "{}.{}".format(commands[0], commands[1])
-            if key in objects:
-                del objects[key]
+            object_storage = storage.all()
+            key = "{}.{}".format(cmd_args[0], cmd_args[1])
+            if key in object_storage:
+                del object_storage[key]
                 storage.save()
             else:
                 print("** no instance found **")
 
     def do_all(self, arg):
         """Display the string representation of instances or classes"""
-        objects = storage.all()
+        object_storage = storage.all()
 
-        commands = shlex.split(arg)
+        cmd_args = shlex.split(arg)
 
-        if len(commands) == 0:
-            for key, value in objects.items():
+        if len(cmd_args) == 0:
+            for key, value in object_storage.items():
                 print(str(value))
-        if commands[0] not in self.permissible_classes:
+        if cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
         else:
-            for key, value in objects.items():
-                if key.split(".")[0] == commands[0]:
+            for key, value in object_storage.items():
+                if key.split(".")[0] == cmd_args[0]:
                     print(str(value))
 
     def do_update(self, arg):
         """Updates attributes of an instance"""
 
-        commands = shlex.split(arg)
+        cmd_args = shlex.split(arg)
 
-        if len(commands) == 0:
+        if len(cmd_args) == 0:
             print("** class name missing **")
-        if commands [0] not in self.permissible_classes:
+        if cmd_args [0] not in self.permissible_classes:
             print("** class doesn't exist **")
-        if len(commands) < 2:
+        if len(cmd_args) < 2:
             print("** instance id missing **")
         else:
-            objects = storage.all()
+            object_storage = storage.all()
 
-            key = "{}.{}".format(commands[0], commands[1])
-            if key not in objects:
+            key = "{}.{}".format(cmd_args[0], cmd_args[1])
+            if key not in object_storage:
                 print("** no instance found **")
-            if len(commands) < 3:
+            if len(cmd_args) < 3:
                 print("** attribute is missing **")
-            if len(commands) < 4:
+            if len(cmd_args) < 4:
                 print("** value is missing **")
             else:
-                obj = objects[key]
+                obj_key = object_storage[key]
 
-            name_of_attribute = commands[2]
-            value_of_attribute = commands[3]
+            name_of_attribute = cmd_args[2]
+            value_of_attribute = cmd_args[3]
 
             try:
                 value_of_attribute = eval[value_of_attribute]
             except Exception:
                 pass
-            setattr(obj, name_of_attribute, value_of_attribute)
+            setattr(obj_key, name_of_attribute, value_of_attribute)
 
-            obj.save()
+            obj_key.save()
 
 
 if __name__ == "__main__":
