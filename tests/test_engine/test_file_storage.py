@@ -1,3 +1,8 @@
+#!/usr/bin/python3
+"""
+User class module
+"""
+
 import os
 import unittest
 from models.base_model import BaseModel

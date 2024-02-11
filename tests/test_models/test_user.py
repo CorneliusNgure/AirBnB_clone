@@ -1,8 +1,14 @@
+#!/usr/bin/python3
+"""
+User class module
+"""
+
 import unittest
 import os
 import models
 from models.user import User
 from models.base_model import BaseModel
+
 
 class TestUser(unittest.TestCase):
     """
@@ -63,8 +69,12 @@ class TestUser(unittest.TestCase):
         Check if the attribute keys match the set value
         """
         test_user = User()
-        test_user = User(email="kingcornelius07@gmail.com", password=
-                "CorneliusNgure", first_name="Cornelius", last_name="Ngure")
+        test_user = User(
+                email="kingcornelius07@gmail.com",
+                password="CorneliusNgure",
+                first_name="Cornelius",
+                last_name="Ngure"
+                )
 
         test_user.email = "kingcornelius07@gmail.com"
         test_user.first_name = "Cornelius"
@@ -81,8 +91,12 @@ class TestUser(unittest.TestCase):
         """
         Test if attributes are accurately set
         """
-        test_user = User(email="kingcornelius07@gmail.com", password=
-                "CorneliusNgure", first_name="Cornelius", last_name="Ngure")
+        test_user = User(
+                email="kingcornelius07@gmail.com",
+                password="CorneliusNgure",
+                first_name="Cornelius",
+                last_name="Ngure"
+                )
 
         self.assertEqual(test_user.email, "kingcornelius07@gmail.com")
         self.assertEqual(test_user.password, "CorneliusNgure")
@@ -97,6 +111,7 @@ class TestUser(unittest.TestCase):
         test_user_2 = User()
 
         self.assertNotEqual(test_user_1.id, test_user_2.id)
+
 
 if __name__ == "__main__":
     unittest.main()

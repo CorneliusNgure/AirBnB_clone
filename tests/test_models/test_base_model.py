@@ -3,6 +3,7 @@
 import unittest
 from models.base_model import BaseModel
 
+
 class TestBaseModel(unittest.TestCase):
 
     def test_init(self):
@@ -29,8 +30,10 @@ class TestBaseModel(unittest.TestCase):
 
         self.assertEqual(instance_dict["__class__"], "BaseModel")
         self.assertEqual(instance_dict["id"], instance.id)
-        self.assertEqual(instance_dict["created_at"], instance.created_at.isoformat())
-        self.assertEqual(instance_dict["updated_at"], instance.updated_at.isoformat())
+        self.assertEqual(instance_dict[
+            "created_at"], instance.created_at.isoformat())
+        self.assertEqual(instance_dict[
+            "updated_at"], instance.updated_at.isoformat())
 
     def test_str(self):
         instance = BaseModel()
@@ -38,6 +41,7 @@ class TestBaseModel(unittest.TestCase):
         self.assertTrue(str(instance).startswith("[BaseModel]"))
         self.assertIn(instance.id, str(instance))
         self.assertIn(str(instance.__dict__), str(instance))
+
 
 if __name__ == "__main__":
     unittest.main()
