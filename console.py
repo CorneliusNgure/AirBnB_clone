@@ -30,31 +30,14 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
     permissible_classes = ["BaseModel", "User"]
 
+    def emptyline(self):
+        """Print nothing when no commands are put"""
+        pass
+
     def do_quit(self, arg):
-        """
-        Command handler for the 'quit' command.
-
-        This method is called when the user enters the quit command.
-        Returns True to exit the command interpreter loop.
-
-        Args:
-            arg (str): The argument provided with the 'quit' command (ignored).
-
-        Returns:
-            bool: True to exit the command interpreter loop.
+        """Quit command to exit the program        
         """
         return True
-
-    def help_quit(self, arg=None):
-        """
-        Help text for the 'quit' command.
-
-        Prints a message explaining the purpose of the 'quit' command.
-
-        Args:
-            arg (str): Arg provided with the 'help quit' command (ignored).
-        """
-        print("Quit command to exit the program")
 
     def do_EOF(self, arg):
         """
@@ -69,12 +52,7 @@ class HBNBCommand(cmd.Cmd):
         Returns:
             bool: True to exit the command interpreter loop.
         """
-        print()
         return True
-
-    def Empty_Line(self):
-        """Unresponsive when empty line is entered"""
-        pass
 
     def do_create(self, arg):
         """Create a new instance of the BaseModel and load it
