@@ -144,7 +144,7 @@ class HBNBCommand(cmd.Cmd):
             if len(cmd_args) < 3:
                 print("** attribute is missing **")
             if len(cmd_args) < 4:
-                print("** value is missing **")
+                print("** value missing **")
             else:
                 obj_key = object_storage[key]
 
