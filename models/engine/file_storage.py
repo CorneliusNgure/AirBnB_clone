@@ -13,7 +13,6 @@ class FileStorage:
     """
     A class for managing object storage in JSON format.
     """
-    
     __file_path = "file.json"
     __objects = {}
 
@@ -39,7 +38,7 @@ class FileStorage:
         obj_dict = {}
         for obj in all_objects.keys():
             obj_dict[obj] = all_objects[obj].to_dict()
-        
+
         with open(FileStorage.__file_path, "w", encoding="utf-8") as f:
             json.dump(obj_dict, f)
 

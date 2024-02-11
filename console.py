@@ -15,6 +15,7 @@ from models.base_model import BaseModel
 from models import storage
 from models.user import User
 
+
 class HBNBCommand(cmd.Cmd):
     """
     A class representing the HBNB command-line interface.
@@ -152,7 +153,7 @@ class HBNBCommand(cmd.Cmd):
 
         if len(cmd_args) == 0:
             print("** class name missing **")
-        if cmd_args [0] not in self.permissible_classes:
+        if cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
         if len(cmd_args) < 2:
             print("** instance id missing **")
