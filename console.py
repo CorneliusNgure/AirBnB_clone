@@ -7,15 +7,13 @@ This module defines a command-line interface using the cmd module.
 It provides a basic shell where users can interact with the HBNB program
 by entering commands.
 
-Classes:
-    HBNBCommand: A class representing the command-line interface.
-
 """
 
 import cmd
 import shlex
 from models.base_model import BaseModel
 from models import storage
+from models.user import User
 
 class HBNBCommand(cmd.Cmd):
     """
@@ -29,7 +27,7 @@ class HBNBCommand(cmd.Cmd):
     """
 
     prompt = "(hbnb) "
-    permissible_classes = ["BaseModel"]
+    permissible_classes = ["BaseModel", "User"]
 
     def do_quit(self, arg):
         """
@@ -88,8 +86,8 @@ class HBNBCommand(cmd.Cmd):
         if cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
         else:
-            new_instance = BaseModel()
-            new_instance.save()
+            new_instance = eval(f"{cmd_args[0]}()")
+            storage.save()
             print(new_instance.id)
 
     def do_show(self, arg):
