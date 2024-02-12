@@ -74,7 +74,7 @@ class HBNBCommand(cmd.Cmd):
         cmd_args = shlex.split(arg)
 
         if len(cmd_args) == 0:
-            print("** class name missing **")
+            print("** class name is missing **")
         if cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
         if len(cmd_args) < 2:
@@ -94,11 +94,10 @@ class HBNBCommand(cmd.Cmd):
 
         if len(cmd_args) == 0:
             print("** class name missing **")
-            return
         if cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
         if len(cmd_args) < 2:
-            print("** instance id is missing **")
+            print("** instance id missing **")
         else:
             object_storage = storage.all()
             key = "{}.{}".format(cmd_args[0], cmd_args[1])
@@ -142,7 +141,7 @@ class HBNBCommand(cmd.Cmd):
             if key not in object_storage:
                 print("** no instance found **")
             if len(cmd_args) < 3:
-                print("** attribute is missing **")
+                print("** attribute name missing **")
             if len(cmd_args) < 4:
                 print("** value missing **")
             else:
