@@ -14,6 +14,11 @@ import shlex
 from models.base_model import BaseModel
 from models import storage
 from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.amenity import Amenity
 
 
 class HBNBCommand(cmd.Cmd):
@@ -28,7 +33,8 @@ class HBNBCommand(cmd.Cmd):
     """
 
     prompt = "(hbnb) "
-    permissible_classes = ["BaseModel", "User"]
+    permissible_classes = ["BaseModel", "User", "Amenity",
+                            "Review", "City", "State", "Place"]
 
     def emptyline(self):
         """Print nothing when no commands are put"""
