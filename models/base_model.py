@@ -22,7 +22,7 @@ class BaseModel:
         Initializes new instance of the BaseModel class with a unique id
         and creation/update timestamps.
         """
-        format_time = "%Y-%m-%dT%H:%M:%S.%f"
+
         self.id = str(uuid.uuid4())
         self.created_at = datetime.utcnow()
         self.updated_at = datetime.utcnow()
@@ -32,7 +32,7 @@ class BaseModel:
                 if i == "__class__":
                     continue
                 if i == "created_at" or i == "updated_at":
-                    setattr(self, i, datetime.strptime(j, format_time))
+                    setattr(self, i, datetime.strptime(j, "%Y-%m-%dT%H:%M:%S.%f"))
                 else:
                     setattr(self, i, j)
 
@@ -67,18 +67,3 @@ class BaseModel:
         """
         class_name = self.__class__.__name__
         return "[{}] ({}) {}".format(class_name, self.id, self.__dict__)
-
-
-if __name__ == "__main__":
-    all_objs = storage.all()
-    print("-- Reloaded objects --")
-    for obj_id in all_objs.keys():
-        obj = all_objs[obj_id]
-        print(obj)
-
-    print("-- Create a new object --")
-    my_model = BaseModel()
-    my_model.name = "My_First_Model"
-    my_model.my_number = 89
-    my_model.save()
-    print(my_model)
