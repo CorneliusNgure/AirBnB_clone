@@ -6,11 +6,11 @@ A command-line interface for the HBNB program.
 This module defines a command-line interface using the cmd module.
 It provides a basic shell where users can interact with the HBNB program
 by entering commands.
-
 """
 
 import cmd
 import shlex
+import ast
 from models.base_model import BaseModel
 from models import storage
 from models.user import User
@@ -68,7 +68,7 @@ class HBNBCommand(cmd.Cmd):
 
         if len(cmd_args) == 0:
             print("** class name missing **")
-        if cmd_args[0] not in self.permissible_classes:
+        elif cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
         else:
             new_instance = eval(f"{cmd_args[0]}()")
@@ -81,9 +81,9 @@ class HBNBCommand(cmd.Cmd):
 
         if len(cmd_args) == 0:
             print("** class name is missing **")
-        if cmd_args[0] not in self.permissible_classes:
+        elif cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
-        if len(cmd_args) < 2:
+        elif len(cmd_args) < 2:
             print("** instance id missing **")
         else:
             object_storage = storage.all()
@@ -100,9 +100,9 @@ class HBNBCommand(cmd.Cmd):
 
         if len(cmd_args) == 0:
             print("** class name missing **")
-        if cmd_args[0] not in self.permissible_classes:
+        elif cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
-        if len(cmd_args) < 2:
+        elif len(cmd_args) < 2:
             print("** instance id missing **")
         else:
             object_storage = storage.all()
@@ -122,12 +122,114 @@ class HBNBCommand(cmd.Cmd):
         if len(cmd_args) == 0:
             for key, value in object_storage.items():
                 print(str(value))
-        if cmd_args[0] not in self.permissible_classes:
+        elif cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
         else:
             for key, value in object_storage.items():
                 if key.split(".")[0] == cmd_args[0]:
                     print(str(value))
+
+    def default(self, arg):
+        """
+        Defines the default logic for invalid user input
+        """
+        list_of_args = arg.split('.')
+
+        name_of_class = list_of_args[0]
+
+        cmd_args = list_of_args[1].split('(')
+
+        cmd_method = cmd_args[0]
+
+        additional_args = cmd_args[1].split(')')[0]
+
+        dictionary_method = {
+                'all': self.do_all,
+                'show': self.do_show,
+                'destroy': self.do_destroy,
+                'update': self.do_update,
+                'count': self.do_count
+                }
+
+        if cmd_method in dictionary_method.keys():
+            if cmd_method != "update":
+                return dictionary_method[cmd_method]("{} {}".format(
+                    name_of_class, additional_args))
+            else:
+                if not name_of_class:
+                    print("** class name missing **")
+                    return
+                try:
+                    obj_id, dict_arg = self.parse_curly_braces_data(additional_args)
+                except Exception:
+                    pass
+                try:
+                    call = dictionary_method[cmd_method]
+                    return call("{} {} {}".format(name_of_class, obj_id, dict_arg))
+                except Exception:
+                    pass
+        else:
+            print("*** Unknown syntax: {}".format(arg))
+            return False
+
+    def parse_curly_braces_data(self, additional_args):
+        """Parses the curly braces data"""
+
+        curlyBraces = re.search(r"\{(.*?)\}", additional_args)
+
+        if curlyBraces:
+            id_with_comma = shlex.split(additional_args[:curlyBraces.span()[0]])
+
+            id = [i.strip(",") for i in id_with_comma][0]
+
+            data_string = curlyBraces.group(1)
+
+            try:
+                dictionary_arg = ast.literal_eval("{" + data_string + "}")
+            except Exception:
+                print("** invalid dictionary format **")
+                return
+            return id, dictionary_arg
+        else:
+            cmd_args = additional_args.split(",")
+            if cmd_args:
+                try:
+                    id = cmd_args[0]
+                except Exception:
+                    return "", ""
+                try:
+                    name_of_attribute = cmd_args[1]
+                except Exception:
+                    return id, ""
+                try:
+                    value_of_attribute = cmd_args[2]
+                except Exception:
+                    return id, name_of_attribute
+                return f"{id}", f"{name_of_attribute} {value_of_attribute}"
+
+    def do_count(self, arg):
+        """
+        Retrieves the number of instances of a class
+        """
+        storage_objects = storage.all()
+
+        cmd_args = shlex.split(arg)
+
+        if arg:
+            name_of_class = cmd_args[0]
+
+        count = 0
+
+        if cmd_args:
+            if name_of_class in self.permissible_classes:
+                for objects in storage_objects.values():
+                    if objects.__class__.__name__ == name_of_class:
+                        count += 1
+                print(count)
+            else:
+                print("** invalid class name **")
+        else:
+            print("** class name missing **")
 
     def do_update(self, arg):
         """Updates attributes of an instance"""
@@ -136,9 +238,9 @@ class HBNBCommand(cmd.Cmd):
 
         if len(cmd_args) == 0:
             print("** class name missing **")
-        if cmd_args[0] not in self.permissible_classes:
+        elif cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
-        if len(cmd_args) < 2:
+        elif len(cmd_args) < 2:
             print("** instance id missing **")
         else:
             object_storage = storage.all()
@@ -146,22 +248,52 @@ class HBNBCommand(cmd.Cmd):
             key = "{}.{}".format(cmd_args[0], cmd_args[1])
             if key not in object_storage:
                 print("** no instance found **")
-            if len(cmd_args) < 3:
+            elif len(cmd_args) < 3:
                 print("** attribute name missing **")
-            if len(cmd_args) < 4:
+            elif len(cmd_args) < 4:
                 print("** value missing **")
             else:
                 obj_key = object_storage[key]
+                curlyBraces = re.search(r"\{(.*?)\}", arg)
 
-            name_of_attribute = cmd_args[2]
-            value_of_attribute = cmd_args[3]
+            if curlyBraces:
+                try:
+                    data_string = curlyBraces.group(1)
 
-            try:
-                value_of_attribute = eval[value_of_attribute]
-            except Exception:
-                pass
-            setattr(obj_key, name_of_attribute, value_of_attribute)
+                    dictionary_arg = ast.literal_eval("{" + data_string + "}")
+                    name_of_attribute = list(dictionary_arg.keys())
+                    value_of_attribute = list(dictionary_arg.values())
 
+                    try:
+                        name_of_attr_1 = name_of_attribute[0]
+                        value_of_attr_1 = value_of_attribute[0]
+                        setattr(obj_key, name_of_attr_1, value_of_attr_1)
+
+                    except Exception:
+                        pass
+
+                    try:
+                        name_of_attr_2 = name_of_attribute[1]
+                        value_of_attr_2 = value_of_attribute[1]
+                        setattr(obj_key, name_of_attr_2, value_of_attr_2)
+
+                    except Exception:
+                        pass
+
+                except Exception:
+                    pass
+            else:
+                attr_name = cmd_args[2]
+                attr_value = cmd_args[3]
+
+                try:
+                    value_of_attribute = eval(attr_value)
+
+                except Exception:
+                    pass
+
+                setattr(obj_key, attr_name, value_of_attribute)
+                
             obj_key.save()
 
 
