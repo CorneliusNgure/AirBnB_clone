@@ -246,6 +246,51 @@ class HBNBCommand(cmd.Cmd):
             object_storage = storage.all()
 
             key = "{}.{}".format(cmd_args[0], cmd_args[1])
+            
+            if key not in object_storage:
+                print("** no instance found **")
+            elif len(cmd_args) < 3:
+                print("** attribute name missing **")
+            elif len(cmd_args) < 4:
+                print("** value missing **")
+            else:
+                obj_key = object_storage[key]
+                curlyBraces = re.search(r"\{(.*?)\}", arg)
+
+                if curlyBraces:
+                    data_string = curlyBraces.group(1)
+                    dictionary_arg = ast.literal_eval("{" + data_string + "}")
+
+                    for attr_name, attr_value in dictionary_arg.items():
+                        setattr(obj_key, attr_name, attr_value)
+                else:
+                    attr_name = cmd_args[2]
+                    attr_value = cmd_args[3]
+
+                    try:
+                        value_of_attribute = eval(attr_value)
+                    except Exception:
+                        value_of_attribute = attr_value
+
+                    setattr(obj_key, attr_name, value_of_attribute)
+
+                obj_key.save()
+
+    def do_update(self, arg):
+        """Updates attributes of an instance"""
+
+        cmd_args = shlex.split(arg)
+
+        if len(cmd_args) == 0:
+            print("** class name missing **")
+        elif cmd_args[0] not in self.permissible_classes:
+            print("** class doesn't exist **")
+        elif len(cmd_args) < 2:
+            print("** instance id missing **")
+        else:
+            object_storage = storage.all()
+
+            key = "{}.{}".format(cmd_args[0], cmd_args[1])
             if key not in object_storage:
                 print("** no instance found **")
             elif len(cmd_args) < 3:
