@@ -80,7 +80,7 @@ class HBNBCommand(cmd.Cmd):
         cmd_args = shlex.split(arg)
 
         if len(cmd_args) == 0:
-            print("** class name is missing **")
+            print("** class name missing **")
         elif cmd_args[0] not in self.permissible_classes:
             print("** class doesn't exist **")
         elif len(cmd_args) < 2:
